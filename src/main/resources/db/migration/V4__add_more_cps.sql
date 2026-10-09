@@ -1,4 +1,3 @@
--- Insertar una muestra más amplia de Códigos Postales
 INSERT INTO cat_codigos_postales (codigo) VALUES 
 ('01000'), ('11000'), ('14000'), ('03100'), ('04000'), -- CDMX
 ('20000'), ('20100'), ('20200'), -- Aguascalientes

@@ -30,7 +30,7 @@ INSERT INTO cat_estados (nombre, pais_id) VALUES
 ('Tamaulipas', 1), ('Tlaxcala', 1), ('Veracruz', 1), ('Yucatán', 1),
 ('Zacatecas', 1);
 
--- Insertar algunos códigos postales de prueba
+
 INSERT INTO cat_codigos_postales (codigo) VALUES 
 ('01000'), ('11000'), ('20000'), ('64000'), ('44100'), ('97000');
 

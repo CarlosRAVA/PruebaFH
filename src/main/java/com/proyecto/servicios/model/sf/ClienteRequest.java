@@ -9,21 +9,21 @@ import java.time.LocalDate;
 public class ClienteRequest {
     @NotBlank
     @Size(min = 2, max = 50)
-    @Pattern(regexp = "^[a-zA-Z\\s]+$")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")
     private String nombre;
 
     @Size(max = 50)
-    @Pattern(regexp = "^[a-zA-Z\\s]*$")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]*$")
     private String segundoNombre;
 
     @NotBlank
     @Size(min = 2, max = 50)
-    @Pattern(regexp = "^[a-zA-Z\\s]+$")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")
     private String apellidoPaterno;
 
     @NotBlank
     @Size(min = 2, max = 50)
-    @Pattern(regexp = "^[a-zA-Z\\s]+$")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")
     private String apellidoMaterno;
 
     @NotNull
@@ -39,6 +39,7 @@ public class ClienteRequest {
     private String rfc;
 
     @NotBlank
+    @Pattern(regexp = "^(?i)(Hombre|Mujer|Otro)$", message = "El sexo debe ser Hombre, Mujer u Otro")
     private String sexo;
 
     @NotNull

@@ -36,16 +36,20 @@ public class CuentaServiceImpl implements CuentaService {
 
     @Override
     public List<CuentaResponse> consultarPorClienteId(Long clienteId) {
-        return cuentaRepository.findByClienteId(clienteId).stream()
-                .map(CuentaResponse::new)
-                .collect(Collectors.toList());
+        List<Cuenta> cuentas = cuentaRepository.findByClienteId(clienteId);
+        if (cuentas.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron cuentas para el cliente con id: " + clienteId);
+        }
+        return cuentas.stream().map(CuentaResponse::new).collect(Collectors.toList());
     }
 
     @Override
     public List<CuentaResponse> buscarPorEstatus(String estatus) {
-        return cuentaRepository.findByEstatus(estatus).stream()
-                .map(CuentaResponse::new)
-                .collect(Collectors.toList());
+        List<Cuenta> cuentas = cuentaRepository.findByEstatusIgnoreCase(estatus);
+        if (cuentas.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron cuentas con el estatus: " + estatus);
+        }
+        return cuentas.stream().map(CuentaResponse::new).collect(Collectors.toList());
     }
 
     @Override

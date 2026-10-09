@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(AuthRequest request) {
         Usuario usuario = usuarioRepository.findByCorreo(request.getCorreo())
-                .orElseThrow(() -> new ResourceNotFoundException("Credenciales inválidas."));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
 
         if (!usuario.getActivo()) {
             throw new ValidationException("Usuario inactivo.");

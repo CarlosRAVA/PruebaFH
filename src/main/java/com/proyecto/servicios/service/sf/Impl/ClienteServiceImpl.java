@@ -145,17 +145,29 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<ClienteResponse> buscarPorNombre(String nombre) {
-        return clienteRepository.findByNombreContainingIgnoreCase(nombre).stream().map(ClienteResponse::new).collect(Collectors.toList());
+        List<Cliente> clientes = clienteRepository.findByNombreContainingIgnoreCase(nombre);
+        if (clientes.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron clientes con el nombre: " + nombre);
+        }
+        return clientes.stream().map(ClienteResponse::new).collect(Collectors.toList());
     }
 
     @Override
     public List<ClienteResponse> buscarPorApellidoPaterno(String apellidoPaterno) {
-        return clienteRepository.findByApellidoPaternoContainingIgnoreCase(apellidoPaterno).stream().map(ClienteResponse::new).collect(Collectors.toList());
+        List<Cliente> clientes = clienteRepository.findByApellidoPaternoContainingIgnoreCase(apellidoPaterno);
+        if (clientes.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron clientes con el apellido paterno: " + apellidoPaterno);
+        }
+        return clientes.stream().map(ClienteResponse::new).collect(Collectors.toList());
     }
 
     @Override
     public List<ClienteResponse> buscarPorApellidoMaterno(String apellidoMaterno) {
-        return clienteRepository.findByApellidoMaternoContainingIgnoreCase(apellidoMaterno).stream().map(ClienteResponse::new).collect(Collectors.toList());
+        List<Cliente> clientes = clienteRepository.findByApellidoMaternoContainingIgnoreCase(apellidoMaterno);
+        if (clientes.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron clientes con el apellido materno: " + apellidoMaterno);
+        }
+        return clientes.stream().map(ClienteResponse::new).collect(Collectors.toList());
     }
 
     @Override
@@ -261,10 +273,18 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setActivo(false);
         clienteRepository.save(cliente);
 
-        Usuario usuario = usuarioRepository.findByCorreo(cliente.getCorreoElectronico())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario asociado no encontrado."));
-        usuario.setActivo(false);
-        usuarioRepository.save(usuario);
+        // Desactivar usuario
+        usuarioRepository.findByCorreo(cliente.getCorreoElectronico()).ifPresent(usuario -> {
+            usuario.setActivo(false);
+            usuarioRepository.save(usuario);
+        });
+
+        // Desactivar cuentas asociadas
+        List<Cuenta> cuentas = cuentaRepository.findByClienteId(id);
+        for (Cuenta cuenta : cuentas) {
+            cuenta.setEstatus("INACTIVA");
+            cuentaRepository.save(cuenta);
+        }
     }
 
     private void validarEdad(LocalDate fechaNacimiento) {

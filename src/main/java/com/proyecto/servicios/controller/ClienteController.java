@@ -62,8 +62,8 @@ public class ClienteController {
 
     @GetMapping("/rango-fechas")
     public ResponseEntity<List<ClienteResponse>> consultarPorRangoFechas(
-            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime inicio,
-            @RequestParam org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fin) {
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime inicio,
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fin) {
         return ResponseEntity.ok(clienteService.consultarPorRangoFechas(inicio, fin));
     }
 
