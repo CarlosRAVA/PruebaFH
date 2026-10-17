@@ -1,0 +1,114 @@
+﻿[
+    {
+        "caso":  "Login con credenciales inexistentes",
+        "metodo":  "POST",
+        "ruta":  "/auth/login",
+        "esperado":  401,
+        "obtenido":  401,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Crear usuario valido",
+        "metodo":  "POST",
+        "ruta":  "/usuarios",
+        "esperado":  201,
+        "obtenido":  201,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Crear usuario duplicado",
+        "metodo":  "POST",
+        "ruta":  "/usuarios",
+        "esperado":  409,
+        "obtenido":  409,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Crear usuario con datos invalidos",
+        "metodo":  "POST",
+        "ruta":  "/usuarios",
+        "esperado":  400,
+        "obtenido":  400,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Login correcto",
+        "metodo":  "POST",
+        "ruta":  "/auth/login",
+        "esperado":  200,
+        "obtenido":  200,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Consultar detalle sin token",
+        "metodo":  "POST",
+        "ruta":  "/usuarios/detalle",
+        "esperado":  401,
+        "obtenido":  401,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Metodo GET no soportado",
+        "metodo":  "GET",
+        "ruta":  "/usuarios",
+        "esperado":  405,
+        "obtenido":  405,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Busqueda dinamica por correo",
+        "metodo":  "POST",
+        "ruta":  "/usuarios/buscar",
+        "esperado":  200,
+        "obtenido":  200,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Consultar detalle por RequestBody",
+        "metodo":  "POST",
+        "ruta":  "/usuarios/detalle",
+        "esperado":  200,
+        "obtenido":  200,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Consultar id inexistente",
+        "metodo":  "POST",
+        "ruta":  "/usuarios/detalle",
+        "esperado":  404,
+        "obtenido":  404,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Crear segundo usuario",
+        "metodo":  "POST",
+        "ruta":  "/usuarios",
+        "esperado":  201,
+        "obtenido":  201,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Modificar usuario ajeno sin permisos",
+        "metodo":  "PUT",
+        "ruta":  "/usuarios",
+        "esperado":  403,
+        "obtenido":  403,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Cambiar estatus propio",
+        "metodo":  "PATCH",
+        "ruta":  "/usuarios/estatus",
+        "esperado":  200,
+        "obtenido":  200,
+        "resultado":  "PASS"
+    },
+    {
+        "caso":  "Baja logica de usuario",
+        "metodo":  "DELETE",
+        "ruta":  "/usuarios",
+        "esperado":  200,
+        "obtenido":  200,
+        "resultado":  "PASS"
+    }
+]

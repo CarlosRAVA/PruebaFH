@@ -11,9 +11,9 @@ plugins {
 group 'com.proyecto.servicio.empresa'
 version '1.0'
 
-java{
-    sourceCompatibility=17
-    targetCompatibility=17
+java {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
 }
 
 repositories {
@@ -83,6 +83,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-inline:5.1.1'
     testImplementation 'com.h2database:h2:2.2.220'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
@@ -93,6 +94,8 @@ configurations.all {
     exclude group: "org.apache.logging.log4j", module: "log4j-api"
     exclude group: "org.apache.logging.log4j", module: "log4j-to-slf4j"
     exclude group: "log4j", module: "log4j"
+    // Evita el conflicto con spring-jcl (Spring Boot ya provee la API de Commons Logging)
+    exclude group: "commons-logging", module: "commons-logging"
 }
 
 test {

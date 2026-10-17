@@ -1,9 +1,14 @@
 package com.proyecto.servicios.controller;
 
+import com.proyecto.servicios.model.common.ApiResponse;
+import com.proyecto.servicios.model.sf.ClienteIdRequest;
 import com.proyecto.servicios.model.sf.ClienteRequest;
 import com.proyecto.servicios.model.sf.ClienteResponse;
+import com.proyecto.servicios.model.sf.ClienteSearchRequest;
 import com.proyecto.servicios.model.sf.ClienteUpdateRequest;
 import com.proyecto.servicios.service.sf.ClienteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,72 +19,44 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
+@Tag(name = "Clientes", description = "Endpoints para la administración y consulta de clientes")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteResponse> registrarCliente(@Valid @RequestBody ClienteRequest request) {
-        return new ResponseEntity<>(clienteService.registrarCliente(request), HttpStatus.CREATED);
+    @Operation(summary = "Registrar nuevo cliente con sus cuentas y usuario asociados")
+    public ResponseEntity<ApiResponse<ClienteResponse>> registrarCliente(@Valid @RequestBody ClienteRequest request) {
+        ClienteResponse nuevoCliente = clienteService.registrarCliente(request);
+        return new ResponseEntity<>(ApiResponse.success(nuevoCliente, "Cliente registrado exitosamente."), HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ClienteResponse>> consultarTodos(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String apellidoPaterno,
-            @RequestParam(required = false) String apellidoMaterno,
-            @RequestParam(required = false) String curp,
-            @RequestParam(required = false) String rfc,
-            @RequestParam(required = false) String correo) {
-        
-        if (curp != null) {
-            return ResponseEntity.ok(List.of(clienteService.consultarPorCurp(curp)));
-        }
-        if (rfc != null) {
-            return ResponseEntity.ok(List.of(clienteService.consultarPorRfc(rfc)));
-        }
-        if (correo != null) {
-            return ResponseEntity.ok(List.of(clienteService.consultarPorCorreo(correo)));
-        }
-        if (nombre != null) {
-            return ResponseEntity.ok(clienteService.buscarPorNombre(nombre));
-        }
-        if (apellidoPaterno != null) {
-            return ResponseEntity.ok(clienteService.buscarPorApellidoPaterno(apellidoPaterno));
-        }
-        if (apellidoMaterno != null) {
-            return ResponseEntity.ok(clienteService.buscarPorApellidoMaterno(apellidoMaterno));
-        }
-
-        return ResponseEntity.ok(clienteService.consultarTodos());
+    @PostMapping("/buscar")
+    @Operation(summary = "Búsqueda dinámica de clientes combinando filtros en un único endpoint")
+    public ResponseEntity<ApiResponse<List<ClienteResponse>>> buscarClientes(@Valid @RequestBody(required = false) ClienteSearchRequest request) {
+        List<ClienteResponse> clientes = clienteService.buscarClientes(request);
+        return ResponseEntity.ok(ApiResponse.success(clientes, "Consulta realizada con éxito. Total encontrados: " + clientes.size()));
     }
 
-    @GetMapping("/activos")
-    public ResponseEntity<List<ClienteResponse>> consultarActivos() {
-        return ResponseEntity.ok(clienteService.consultarActivos());
+    @PostMapping("/detalle")
+    @Operation(summary = "Consultar información detallada de un cliente por ID")
+    public ResponseEntity<ApiResponse<ClienteResponse>> consultarPorId(@Valid @RequestBody ClienteIdRequest request) {
+        ClienteResponse cliente = clienteService.consultarPorId(request);
+        return ResponseEntity.ok(ApiResponse.success(cliente, "Cliente obtenido exitosamente."));
     }
 
-    @GetMapping("/rango-fechas")
-    public ResponseEntity<List<ClienteResponse>> consultarPorRangoFechas(
-            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime inicio,
-            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fin) {
-        return ResponseEntity.ok(clienteService.consultarPorRangoFechas(inicio, fin));
+    @PutMapping
+    @Operation(summary = "Actualizar información de cliente")
+    public ResponseEntity<ApiResponse<ClienteResponse>> actualizarCliente(@Valid @RequestBody ClienteUpdateRequest request) {
+        ClienteResponse actualizado = clienteService.actualizarCliente(request);
+        return ResponseEntity.ok(ApiResponse.success(actualizado, "Cliente actualizado exitosamente."));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponse> consultarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(clienteService.consultarPorId(id));
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<ClienteResponse> actualizarParcial(@PathVariable Long id, @RequestBody ClienteUpdateRequest request) {
-        return ResponseEntity.ok(clienteService.actualizarParcial(id, request));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> bajaLogica(@PathVariable Long id) {
-        clienteService.bajaLogica(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping
+    @Operation(summary = "Baja lógica de cliente mediante Request Body")
+    public ResponseEntity<ApiResponse<Void>> bajaLogica(@Valid @RequestBody ClienteIdRequest request) {
+        clienteService.bajaLogica(request);
+        return ResponseEntity.ok(ApiResponse.success(null, "Cliente y cuentas asociadas dadas de baja exitosamente."));
     }
 }

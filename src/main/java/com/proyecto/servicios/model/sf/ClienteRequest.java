@@ -1,5 +1,6 @@
 package com.proyecto.servicios.model.sf;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -72,6 +73,7 @@ public class ClienteRequest {
     @Positive
     private BigDecimal ingresoMensual;
 
+    @Valid
     @NotNull
     private DomicilioRequest domicilio;
     

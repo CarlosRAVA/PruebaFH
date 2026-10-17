@@ -7,9 +7,12 @@ import com.proyecto.servicios.entity.sf.Usuario;
 import com.proyecto.servicios.exceptions.DuplicateResourceException;
 import com.proyecto.servicios.exceptions.ResourceNotFoundException;
 import com.proyecto.servicios.exceptions.ValidationException;
+import com.proyecto.servicios.model.sf.ClienteIdRequest;
 import com.proyecto.servicios.model.sf.ClienteRequest;
 import com.proyecto.servicios.model.sf.ClienteResponse;
+import com.proyecto.servicios.model.sf.ClienteSearchRequest;
 import com.proyecto.servicios.model.sf.ClienteUpdateRequest;
+import com.proyecto.servicios.repositorys.sf.ClienteSpecification;
 import com.proyecto.servicios.entity.sf.CatPais;
 import com.proyecto.servicios.entity.sf.CatEstado;
 import com.proyecto.servicios.entity.sf.CatCodigoPostal;
@@ -132,11 +135,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ClienteResponse> consultarTodos() {
         return clienteRepository.findAll().stream().map(ClienteResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ClienteResponse consultarPorId(Long id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
@@ -144,6 +149,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ClienteResponse> buscarPorNombre(String nombre) {
         List<Cliente> clientes = clienteRepository.findByNombreContainingIgnoreCase(nombre);
         if (clientes.isEmpty()) {
@@ -153,6 +159,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ClienteResponse> buscarPorApellidoPaterno(String apellidoPaterno) {
         List<Cliente> clientes = clienteRepository.findByApellidoPaternoContainingIgnoreCase(apellidoPaterno);
         if (clientes.isEmpty()) {
@@ -162,6 +169,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ClienteResponse> buscarPorApellidoMaterno(String apellidoMaterno) {
         List<Cliente> clientes = clienteRepository.findByApellidoMaternoContainingIgnoreCase(apellidoMaterno);
         if (clientes.isEmpty()) {
@@ -171,6 +179,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ClienteResponse consultarPorCurp(String curp) {
         Cliente cliente = clienteRepository.findByCurp(curp)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con CURP: " + curp));
@@ -178,6 +187,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ClienteResponse consultarPorRfc(String rfc) {
         Cliente cliente = clienteRepository.findByRfc(rfc)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con RFC: " + rfc));
@@ -185,6 +195,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ClienteResponse consultarPorCorreo(String correo) {
         Cliente cliente = clienteRepository.findByCorreoElectronico(correo)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con correo: " + correo));
@@ -192,11 +203,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ClienteResponse> consultarActivos() {
         return clienteRepository.findByActivoTrue().stream().map(ClienteResponse::new).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ClienteResponse> consultarPorRangoFechas(java.time.LocalDateTime start, java.time.LocalDateTime end) {
         return clienteRepository.findByFechaCreacionBetween(start, end).stream().map(ClienteResponse::new).collect(Collectors.toList());
     }
@@ -263,6 +276,31 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         return new ClienteResponse(clienteRepository.save(cliente));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClienteResponse> buscarClientes(ClienteSearchRequest request) {
+        return clienteRepository.findAll(ClienteSpecification.conFiltros(request))
+                .stream().map(ClienteResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ClienteResponse consultarPorId(ClienteIdRequest request) {
+        return consultarPorId(request.getId());
+    }
+
+    @Override
+    @Transactional
+    public ClienteResponse actualizarCliente(ClienteUpdateRequest request) {
+        return actualizarParcial(request.getId(), request);
+    }
+
+    @Override
+    @Transactional
+    public void bajaLogica(ClienteIdRequest request) {
+        bajaLogica(request.getId());
     }
 
     @Override

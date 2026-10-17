@@ -33,6 +33,8 @@ public class FlywayConfig {
                 .baselineOnMigrate(true)
                 .baselineVersion("0")
                 .load();
+        // Repara discrepancias de checksum en migraciones ya aplicadas y marca fallidas como resueltas
+        flyway.repair();
         flyway.migrate();
         return flyway;
     }

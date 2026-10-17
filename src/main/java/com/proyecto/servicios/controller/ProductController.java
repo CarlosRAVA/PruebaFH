@@ -1,5 +1,6 @@
 package com.proyecto.servicios.controller;
 
+import com.proyecto.servicios.model.common.ApiResponse;
 import com.proyecto.servicios.model.gestopago.CatProductJsonDto;
 import com.proyecto.servicios.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +23,8 @@ public class ProductController {
 
     @GetMapping("/getProductList")
     @Operation(summary = "Obtener lista de productos del servicio externo")
-    public ResponseEntity<List<CatProductJsonDto>> getProductListEndpoint() {
-        return ResponseEntity.ok(productService.getProductList());
+    public ResponseEntity<ApiResponse<List<CatProductJsonDto>>> getProductListEndpoint() {
+        List<CatProductJsonDto> productos = productService.getProductList();
+        return ResponseEntity.ok(ApiResponse.success(productos, "Lista de productos obtenida exitosamente."));
     }
 }

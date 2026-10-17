@@ -1,0 +1,43 @@
+﻿===================================================================
+EVIDENCIA DE PRUEBAS HTTP REALES - API Administracion de Usuarios
+Fecha: 10/17/2026 12:45:29 PM
+Servidor: http://localhost:8080
+===================================================================
+
+>> Levantando la aplicacion (gradlew bootRun)...
+>> Aplicacion lista. Ejecutando casos...
+
+[PASS] POST /auth/login -> esperado 401, obtenido 401
+        -> {"success":false,"message":"Credenciales de autenticación inválidas.","timestamp":"2026-10-17T12:45:56.119813"}
+[PASS] POST /usuarios -> esperado 201, obtenido 201
+        -> {"success":true,"message":"Usuario creado exitosamente.","data":{"id":1,"correo":"rubrica_20261017124529_a@utng.mx","rol":"ROLE_USER","activo":true,"clienteId":null,"clienteNombreCompleto":null,"fechaCreacion":"2026-10-17T12:45:56.448948","fechaActualizacion":"2026-10-17T12:45:56.448948"},"timestamp":"2026-10-17T12:45:56.588566"}
+[PASS] POST /usuarios -> esperado 409, obtenido 409
+        -> {"success":false,"message":"El correo electrónico rubrica_20261017124529_a@utng.mx ya está registrado en el sistema.","timestamp":"2026-10-17T12:45:56.6679697"}
+[PASS] POST /usuarios -> esperado 400, obtenido 400
+        -> {"success":false,"message":"La solicitud contiene datos incorrectos o inconsistentes. Verifique los campos enviados.","timestamp":"2026-10-17T12:45:56.7260382","errors":{"password":"La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un caracter especial (@#$%^&+=!._-)","correo":"El formato del correo electrónico es inválido"}}
+[PASS] POST /auth/login -> esperado 200, obtenido 200
+        -> {"success":true,"message":"Inicio de sesiÃ³n exitoso.","data":{"token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJydWJyaWNhXzIwMjYxMDE3MTI0NTI5X2FAdXRuZy5teCIsImlhdCI6MTc5MjI2Mjc1NiwiZXhwIjoxNzkyMjY2MzU2fQ.TxcJ5Y62xWrTQ1KfI-oKIYLUVskiIVySPAq8wIQ9P0E","tipoToken":"Bearer","expiraEn":3600000},"timestamp":"2026-10-17T12:45:57.0105558"}
+        token recibido: eyJhbGciOiJIUzI1NiJ9.eyJz...
+
+[PASS] POST /usuarios/detalle -> esperado 401, obtenido 401
+        -> 
+[PASS] GET /usuarios -> esperado 405, obtenido 405
+        -> {"success":false,"message":"El método HTTP GET no está soportado para esta ruta.","timestamp":"2026-10-17T12:45:57.1291796"}
+[PASS] POST /usuarios/buscar -> esperado 200, obtenido 200
+        -> {"success":true,"message":"Consulta realizada con Ã©xito. Total encontrados: 1","data":[{"id":1,"correo":"rubrica_20261017124529_a@utng.mx","rol":"ROLE_USER","activo":true,"clienteId":null,"clienteNombreCompleto":null,"fechaCreacion":"2026-10-17T12:45:56.448948","fechaActualizacion":"2026-10-17T12:45:56.448948"}],"timestamp":"2026-10-17T12:45:57.1959473"}
+[PASS] POST /usuarios/detalle -> esperado 200, obtenido 200
+        -> {"success":true,"message":"Usuario obtenido exitosamente.","data":{"id":1,"correo":"rubrica_20261017124529_a@utng.mx","rol":"ROLE_USER","activo":true,"clienteId":null,"clienteNombreCompleto":null,"fechaCreacion":"2026-10-17T12:45:56.448948","fechaActualizacion":"2026-10-17T12:45:56.448948"},"timestamp":"2026-10-17T12:45:57.2763143"}
+[PASS] POST /usuarios/detalle -> esperado 404, obtenido 404
+        -> {"success":false,"message":"Usuario no encontrado con ID: 999999","timestamp":"2026-10-17T12:45:57.3281149"}
+[PASS] POST /usuarios -> esperado 201, obtenido 201
+        -> {"success":true,"message":"Usuario creado exitosamente.","data":{"id":2,"correo":"rubrica_20261017124529_b@utng.mx","rol":"ROLE_USER","activo":true,"clienteId":null,"clienteNombreCompleto":null,"fechaCreacion":"2026-10-17T12:45:57.486936","fechaActualizacion":"2026-10-17T12:45:57.486936"},"timestamp":"2026-10-17T12:45:57.4914184"}
+[PASS] PUT /usuarios -> esperado 403, obtenido 403
+        -> {"success":false,"message":"No tiene autorización para acceder o modificar los datos de este usuario.","timestamp":"2026-10-17T12:45:57.5625242"}
+[PASS] PATCH /usuarios/estatus -> esperado 200, obtenido 200
+        -> {"success":true,"message":"Estatus de usuario actualizado exitosamente.","data":{"id":1,"correo":"rubrica_20261017124529_a@utng.mx","rol":"ROLE_USER","activo":true,"clienteId":null,"clienteNombreCompleto":null,"fechaCreacion":"2026-10-17T12:45:56.448948","fechaActualizacion":"2026-10-17T12:45:56.448948"},"timestamp":"2026-10-17T12:45:57.6810164"}
+[PASS] DELETE /usuarios -> esperado 200, obtenido 200
+        -> {"success":true,"message":"Usuario dado de baja exitosamente.","timestamp":"2026-10-17T12:45:57.7721165"}
+
+===================================================================
+RESULTADO: 14 PASS / 0 FAIL
+===================================================================

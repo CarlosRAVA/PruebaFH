@@ -28,7 +28,7 @@ public class Cuenta {
     @Column(name = "numero_cuenta", nullable = false, unique = true, length = 20)
     private String numeroCuenta;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal saldo;
 
     @Column(nullable = false, length = 20)

@@ -1,11 +1,13 @@
 package com.proyecto.servicios.entity.sf;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cat_codigos_postales")
-@Data
+@Getter
+@Setter
 public class CatCodigoPostal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

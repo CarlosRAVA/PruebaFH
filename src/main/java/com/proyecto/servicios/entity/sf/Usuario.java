@@ -1,7 +1,9 @@
 package com.proyecto.servicios.entity.sf;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,9 +13,6 @@ import java.time.LocalDateTime;
 @Table(name = "usuarios")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Usuario {
 
     @Id
@@ -21,7 +20,7 @@ public class Usuario {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = true)
     private Cliente cliente;
 
     @Column(nullable = false, unique = true, length = 100)
@@ -30,7 +29,9 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @Builder.Default
+    @Column(nullable = false, length = 30)
+    private String rol = "ROLE_USER";
+
     @Column(nullable = false)
     private Boolean activo = true;
 
@@ -41,4 +42,19 @@ public class Usuario {
     @UpdateTimestamp
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
+
+    public Usuario() {
+    }
+
+    @Builder
+    public Usuario(Long id, Cliente cliente, String correo, String password, String rol, Boolean activo, LocalDateTime fechaCreacion, LocalDateTime fechaActualizacion) {
+        this.id = id;
+        this.cliente = cliente;
+        this.correo = correo;
+        this.password = password;
+        this.rol = rol != null ? rol : "ROLE_USER";
+        this.activo = activo != null ? activo : true;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaActualizacion = fechaActualizacion;
+    }
 }
